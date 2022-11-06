@@ -95,14 +95,14 @@ export default class MyCamera extends Component {
                         style={styles.button}
                         onPress={()=>{this.guardarFoto()}}
                     >
-                        <MaterialIcons name="cloud-upload" size={70} color="#552586" />
+                        <MaterialIcons name="cloud-upload" size={60} color="#552586" />
                     </TouchableOpacity>
                 
                     <TouchableOpacity
                         style={styles.button}
                         onPress={()=>{this.clearFoto()}}
                     >
-                        <MaterialIcons name="delete" size={70} color="#552586" />
+                        <MaterialIcons name="delete" size={60} color="#552586" />
                     </TouchableOpacity>
                     
                 </View>
