@@ -13,15 +13,21 @@ export default class Register extends Component {
             email:'',
             pass:'',
             userName:'',
-            errorMensaje:''
+            bio: '',
+            error: {
+                email:'',
+                userName:'',
+                pass:''
+            }
+            
         }
     }
 
     componentDidMount(){
         auth.onAuthStateChanged(user => {
-            if(user){
-                this.props.navigation.navigate('Menu')
-            } 
+            // if(user){
+            //     this.props.navigation.navigate('Menu')
+            // } 
             this.setState({
                 loading:false
             })
@@ -31,20 +37,38 @@ export default class Register extends Component {
            
     }
 
-    register(email,pass, userName){
+    register(email,pass,userName){
+        if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
+            this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
+            return
+
+        }else if(this.state.userName.length == 0) {
+            this.setState({error: {email:'', userName:'ingrese nombre', pass:''}})
+            return
+        }else if (this.state.email.length == 0){
+            this.setState({error: {email:'ingresa email', userName:'', pass:''}})
+            return
+        } else if (this.state.pass.length == 0){
+            this.setState({error: {email:'', userName:'', pass:'ingrese contraseña'}})
+            return
+        }
+        this.setState({error:{email:'', userName:'', pass:''}})
+        
         auth.createUserWithEmailAndPassword(email,pass)
         .then((res)=> {
 
             db.collection('users').add({
                 email:email,
                 userName:userName,
+                bio:bio,
                 posts:[]
             })
 
             this.setState({
                 email:'',
                 pass:'',
-                userName:''
+                userName:'',
+                bio:''
             })
             this.props.navigation.navigate('Login')
         })
@@ -65,36 +89,54 @@ export default class Register extends Component {
                     <TextInput
                             style={styles.campo}
                             keyboardType='default'
-                            placeholder='username'
+                            placeholder='Nombre de usuario'
                             onChangeText={userName=>this.setState({userName:userName})}
                             value={this.state.userName}
 
                         />
+                        <Text style={styles.errorText}>
+                        {this.state.error.userName && 'El nombre de usuario es obligatorio'}
+                        </Text>
+                    <TextInput
+                            style={styles.campo}
+                            keyboardType='default'
+                            placeholder='Biografía'
+                            onChangeText={bio=>this.setState({bio:bio})}
+                            value={this.state.bio}
+                        />
                     <TextInput
                         style={styles.campo}
                         keyboardType='email-address'
-                        placeholder='email@email.com'
+                        placeholder='Dirección de email'
                         onChangeText={userEmail=>this.setState({email:userEmail})}
                         value={this.state.email}
 
                     />
+                    <Text style={styles.errorText}>
+                    {this.state.error.email && 'La dirección de email es obligatoria'}
+                    </Text>
                     <TextInput
                         style={styles.campo}
                         keyboardType='default'
-                        placeholder='password'
+                        placeholder='Contraseña'
                         secureTextEntry
                         onChangeText={userPass=>this.setState({pass:userPass})}
                         value={this.state.pass}
                     />
+                    <Text style={styles.errorText}>
+                    {this.state.error.pass && 'La contraseña es obligatoria'}
+                    </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
                 </View>
-                
+     
                 <TouchableOpacity 
                     onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName)}}
+                    
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Registrarme</Text>
                 </TouchableOpacity>
+                
                 <TouchableOpacity 
                     onPress={()=>{this.props.navigation.navigate("Login")}}
                     style={styles.button}
@@ -133,7 +175,16 @@ const styles = StyleSheet.create({
 
     button: {
         padding:8,
-        backgroundColor:'#552586',
+        backgroundColor: '#552586',
+        borderRadius:8,
+        textAlign:'center',
+        marginVertical:8,
+        marginHorizontal:16,
+        width:280
+    },
+    button2: {
+        padding:8,
+        backgroundColor: 'grey',
         borderRadius:8,
         textAlign:'center',
         marginVertical:8,

@@ -13,7 +13,11 @@ export default class Login extends Component {
             loading:true,
             email:'',
             pass:'',
-            errorMensaje:''
+            errorMensaje:'',
+            error: {
+                email:'',
+                pass:''
+            }
         }
     }
 
@@ -24,6 +28,20 @@ export default class Login extends Component {
     }
 
     login(email,pass){
+        if ( this.state.email.length == 0  && this.state.pass.length == 0){
+            this.setState({error: {email:'ingrese email', pass: 'ingrese contraseña'}})
+            return
+
+        } else if (this.state.email.length == 0){
+            this.setState({error: {email:'ingresa email', pass:''}})
+            return
+        } else if (this.state.pass.length == 0){
+            this.setState({error: {email:'', pass:'ingrese contraseña'}})
+            return
+        }
+        this.setState({error:{email:'', pass:''}})
+        
+
         auth.signInWithEmailAndPassword(email,pass)
         .then((res)=> {
             this.props.navigation.navigate('Menu')
@@ -40,26 +58,33 @@ export default class Login extends Component {
         return (
             this.state.loading? <Loader/> :
             <View style={styles.container}>
-                <Text style={styles.text}><strong>Login</strong></Text>
+                <Text style={styles.text}><strong>Inicio de sesión</strong></Text>
                 <View>
 
                 
                     <TextInput
                         style={styles.campo}
                         keyboardType='email-address'
-                        placeholder='email@email.com'
+                        placeholder='Dirección de email'
                         onChangeText={userEmail=>this.setState({email:userEmail})}
                         value={this.state.email}
 
                     />
+                     <Text style={styles.errorText}>
+                    {this.state.error.email && 'La dirección de email es obligatoria'}
+                    </Text>
+
                     <TextInput
                         style={styles.campo}
                         keyboardType='default'
-                        placeholder='password'
+                        placeholder='Contraseña'
                         secureTextEntry
                         onChangeText={userPass=>this.setState({pass:userPass})}
                         value={this.state.pass}
                     />
+                    <Text style={styles.errorText}>
+                    {this.state.error.pass && 'La contraseña es obligatoria'}
+                    </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
                 </View>
                 <TouchableOpacity 
