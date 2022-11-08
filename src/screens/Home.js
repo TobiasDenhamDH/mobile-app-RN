@@ -16,7 +16,9 @@ export default class Home extends Component {
             userActivo:{},
             posts:[],
             likes:[],
-            comments:[]
+            comments:[],
+            resultados: [],
+            filterBy:''
         }
     }
 
@@ -34,17 +36,15 @@ export default class Home extends Component {
             loading:false
           })
         })
-        
-   
+          
 }
-
 
     render() {
         return (
                 this.state.loading? <Loader/> :
                 <ScrollView>
                     {/* <Text style={styles.text}><strong>Bienvenido, {auth.currentUser.email}</strong></Text>  */}
-                
+
                 <FlatList
                     data={this.state.posts}
                     keyExtractor={item=>item.id.toString()}

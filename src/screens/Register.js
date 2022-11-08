@@ -54,6 +54,7 @@ export default class Register extends Component {
             })
         })
     }
+    
     render() {
         return (
             this.state.loading? <Loader/> : 
@@ -85,6 +86,7 @@ export default class Register extends Component {
                         secureTextEntry
                         onChangeText={userPass=>this.setState({pass:userPass})}
                         value={this.state.pass}
+
                     />
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
                 </View>
