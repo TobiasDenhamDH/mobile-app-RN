@@ -25,9 +25,9 @@ export default class Register extends Component {
 
     componentDidMount(){
         auth.onAuthStateChanged(user => {
-            // if(user){
-            //     this.props.navigation.navigate('Menu')
-            // } 
+            if(user){
+                this.props.navigation.navigate('Menu')
+            } 
             this.setState({
                 loading:false
             })
@@ -37,7 +37,7 @@ export default class Register extends Component {
            
     }
 
-    register(email,pass,userName){
+    register(email,pass,userName,bio){
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
             this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
             return
@@ -81,7 +81,7 @@ export default class Register extends Component {
     
     render() {
         return (
-            this.state.loading? <Loader/> : 
+            this.state.loading ? <Loader/> : 
             <View style={styles.container}>
                     
                 <Text style={styles.text}><strong>Registro</strong></Text>
@@ -132,7 +132,7 @@ export default class Register extends Component {
                 </View>
      
                 <TouchableOpacity 
-                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName)}}
+                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
                     
                     style={styles.button}
                 >

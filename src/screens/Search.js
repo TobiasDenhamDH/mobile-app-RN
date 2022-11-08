@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text} from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { auth, db } from '../firebase/config';
+import Profile from './Profile';
+import Loader from '../components/Loader';
 
 export default class Search extends Component {
     constructor() {
@@ -23,8 +25,6 @@ export default class Search extends Component {
                 data:doc.data()})
     
         })
-            console.log(users);
-            
             this.setState({
             users: users,
             loading:false
@@ -32,35 +32,22 @@ export default class Search extends Component {
         })
     }
         
-          
     filter(filtro){
-        if () {
-            
-            
-        }else{
+        console.log(this.state.resultados)
+        if (this.state.filterBy.length !== 0 ) {
             let resultadosFiltrados = this.state.users.filter((user) => {return user.data.userName.toLowerCase().includes(filtro.toLowerCase())})
             this.setState({resultados: resultadosFiltrados})
             console.log(resultadosFiltrados)  
-        }
-    }
-
-    
-    handleChange(e){
-        console.log('busqueda')
-        // if (e.target.value.length === 0) {
-        //     e.preventDefault()
-        //     this.setState(
-        //         { filterBy: '',
-        //         resultados: []})
-        // } else {
-        //     this.setState(
-        //         {filterBy: e.target.value}, 
-        //         ()=>{this.filter(this.state.filterBy)})
-        // }
+            this.setState({filterBy: ''})   
+        }else{
+            this.setState({resultados:[]})
+        } 
+        
     }
 
   render() {
     return (
+        this.state.loading ? <Loader/> :
         <ScrollView>
             <View style={styles.container2}>
             <TextInput
@@ -69,7 +56,6 @@ export default class Search extends Component {
                 placeholder='buscar'
                 onChangeText={busqueda=>this.setState({filterBy: busqueda})}
                 value={this.state.filterBy}
-
             />
 
             <TouchableOpacity
@@ -79,6 +65,32 @@ export default class Search extends Component {
             <Ionicons name="search-sharp" size={24} color="black" />
             </TouchableOpacity>
             </View>
+
+            {this.state.resultados.length ?
+            <View> 
+            <Text>Resultados de búsqueda</Text>
+            <FlatList
+                    data={this.state.resultados}
+                    keyExtractor={item=>item.id.toString()}
+                    renderItem={({item})=> 
+                    <TouchableOpacity 
+                        onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
+                    >
+                        <Text>{item.data.userName}</Text>
+                    </TouchableOpacity>}
+            >   </FlatList>
+            </View> 
+
+            :
+
+            this.state.filterBy &&
+
+            <View>
+                <Text>No hubo coincidencias con la búsqueda</Text>
+            </View>
+
+            }
+            
         </ScrollView>
     )
   }

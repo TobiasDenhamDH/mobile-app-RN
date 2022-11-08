@@ -17,8 +17,6 @@ export default class Home extends Component {
             posts:[],
             likes:[],
             comments:[],
-            resultados: [],
-            filterBy:''
         }
     }
 
