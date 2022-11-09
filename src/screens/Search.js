@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { auth, db } from '../firebase/config';
-import Profile from './Profile';
+import { db } from '../firebase/config';
+import { FontAwesome } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 
 export default class Search extends Component {
@@ -27,7 +27,7 @@ export default class Search extends Component {
         })
             this.setState({
             users: users,
-            loading:false
+            loading:false,
             })
         })
     }
@@ -68,17 +68,22 @@ export default class Search extends Component {
 
             {this.state.resultados.length ?
             <View> 
-            <Text>Resultados de búsqueda</Text>
+            <Text style={styles.text}><strong>Resultados de búsqueda</strong></Text>
             <FlatList
                     data={this.state.resultados}
                     keyExtractor={item=>item.id.toString()}
+                    ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
                     renderItem={({item})=> 
                     <TouchableOpacity 
                         onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
                     >
-                        <Text>{item.data.userName}</Text>
+                        <div style={styles.listadoUsers}>
+                        <FontAwesome name="user-circle" size={30} color="black" />
+                        <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
+                        </div>
                     </TouchableOpacity>}
-            >   </FlatList>
+            >
+            </FlatList>
             </View> 
 
             :
@@ -86,7 +91,7 @@ export default class Search extends Component {
             this.state.filterBy &&
 
             <View>
-                <Text>No hubo coincidencias con la búsqueda</Text>
+                <Text style={styles.leyenda}>No hubo coincidencias con la búsqueda</Text>
             </View>
 
             }
@@ -116,5 +121,26 @@ const styles = StyleSheet.create({
     },
     lupa: {
         alignSelf: 'center',
+    },
+    leyenda: {
+        color: 'red',
+        marginLeft: 38
+    },
+    listadoUsers: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        marginLeft: 38,
+    },
+    text: {
+        fontSize: 20,
+        color: 'black',
+        marginBottom: 10,
+        marginTop: 10,
+        alignSelf: 'center'
+    },
+    userName: {
+        paddingLeft: 15,
+        alignSelf: 'center'
     }
 })
