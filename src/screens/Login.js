@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, CheckBox} from 'react-native'
 import { auth } from '../firebase/config'
 import Loader from '../components/Loader'
 
@@ -13,6 +13,7 @@ export default class Login extends Component {
             loading:true,
             email:'',
             pass:'',
+            remember:false,
             errorMensaje:'',
             error: {
                 email:'',
@@ -22,9 +23,19 @@ export default class Login extends Component {
     }
 
     componentDidMount(){
-        this.setState({
-            loading:false
-        })
+        console.log(this.state.remember)
+        if(this.state.remember == true) {
+            auth.onAuthStateChanged(user => {
+            if(user){
+                this.props.navigation.navigate('Menu')
+       
+            }
+        })} 
+        else {
+                this.props.navigation.navigate('Login')
+          
+        }
+        this.setState({loading:false})
     }
 
     login(email,pass){
@@ -87,6 +98,20 @@ export default class Login extends Component {
                     </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
                 </View>
+
+                <View style={styles.checkboxContainer}>
+                    
+                <CheckBox
+                    value={this.state.remember}
+                    onValueChange={()=>this.setState({
+                        remember:!this.state.remember
+                    })}
+                    style={styles.checkbox}
+                />
+                <Text style={styles.label}>Remember me</Text>
+             </View>
+    
+
                 <TouchableOpacity 
                     onPress={()=>{this.login(this.state.email, this.state.pass)}}
                     style={styles.button}
@@ -97,7 +122,7 @@ export default class Login extends Component {
                     onPress={()=>{this.props.navigation.navigate("Register")}}
                     style={styles.button}
                 >
-                    <Text style={styles.buttonText}>Volver a Registro</Text>
+                    <Text style={styles.buttonText}>No tengo cuenta</Text>
                 </TouchableOpacity>
             </View>
         )
@@ -149,5 +174,16 @@ const styles = StyleSheet.create({
         color: 'black',
         marginHorizontal:16,
         marginBottom:10
-    }
+    },
+    checkboxContainer: {
+        flexDirection: "row",
+        // marginBottom: 20,
+    },
+    checkbox: {
+        alignSelf: "center",
+    },
+    label: {
+        margin: 2,
+    },
+    
 })

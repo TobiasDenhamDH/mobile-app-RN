@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native'
 import { AntDesign } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons'; 
 import { auth, db } from '../firebase/config'
@@ -17,6 +17,7 @@ export default class Post extends Component  {
     }
 
     componentDidMount(){
+        console.log(this.props.post)
         this.setState({
             likes: this.props.post.data.likes || [],
           })
@@ -24,7 +25,7 @@ export default class Post extends Component  {
 
     borrarLikes() {
         db.collection('posts').doc(this.props.post.id).update({
-            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.email)
+            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.displayName)
         })
         .then((res) => {
             this.setState({
@@ -36,7 +37,7 @@ export default class Post extends Component  {
 
     likear(){
         db.collection('posts').doc(this.props.post.id).update({
-            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.email)
+            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName)
         })
         .then((res) => {
             this.setState({
@@ -54,7 +55,7 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
-                <Text style={styles.text2}><strong>{this.props.post.data.owner}</strong></Text>
+                <Text style={styles.text2}><strong>@{this.props.post.data.owner}</strong></Text>
                 <Image 
                     source={{uri:this.props.post.data.uri}}
                     resizeMode="contain"
@@ -64,7 +65,7 @@ export default class Post extends Component  {
                 <Text style={styles.text}>{this.props.post.data.description}</Text>
 
 
-                {this.state.likes.includes(auth.currentUser.email)?
+                {this.state.likes.includes(auth.currentUser.displayName)?
                 <View style={styles.container2}>
                     <TouchableOpacity 
                         onPress={(borrarLike)=>{this.borrarLikes(borrarLike)}}
