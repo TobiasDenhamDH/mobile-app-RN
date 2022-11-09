@@ -54,7 +54,7 @@ export default class NewPost extends Component {
             .catch(err=>console.log(err))
 
         db.collection('posts').add({
-            owner:auth.currentUser.email,
+            owner:auth.currentUser.displayName,
             description:this.state.description,
             likes:[],
             comments:[],
