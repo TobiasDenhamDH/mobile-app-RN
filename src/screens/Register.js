@@ -24,18 +24,14 @@ export default class Register extends Component {
     }
 
     componentDidMount(){
-        auth.onAuthStateChanged(user => {
-            if(user){
-                this.props.navigation.navigate('Menu')
-            } 
+
             this.setState({
                 loading:false
             })
         
-        })
+        }
 
            
-    }
 
     register(email,pass,userName,bio){
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
@@ -63,6 +59,10 @@ export default class Register extends Component {
                 bio:bio,
                 posts:[]
             })
+            console.log(res)
+            res.user.updateProfile({
+                displayName: userName,
+              })
 
             this.setState({
                 email:'',
