@@ -33,21 +33,37 @@ export default class Register extends Component {
 
            
 
-    register(email,pass,userName,bio){
+    register(email,pass,userName){
+
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
             this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
             return
 
-        }else if(this.state.userName.length == 0) {
-            this.setState({error: {email:'', userName:'ingrese nombre', pass:''}})
+        }else if(this.state.userName.length == 0 && this.state.email.length == 0 ) {
+            this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass:''}})
             return
-        }else if (this.state.email.length == 0){
-            this.setState({error: {email:'ingresa email', userName:'', pass:''}})
+
+        }else if (this.state.userName.length == 0 && this.state.pass.length == 0 ){
+            this.setState({error: {email:'', userName:'ingrese nombre', pass:'ingrese contraseña'}})
             return
-        } else if (this.state.pass.length == 0){
+
+        } else if (this.state.email.length == 0 && this.state.pass.length == 0 ){
+            this.setState({error: {email:'ingrese email', userName:'', pass:'ingrese contraseña'}})
+            return
+
+        } else if (this.state.email.length == 0){
+            this.setState({error: {email:'ingrese email', userName:'', pass:''}})
+            return
+
+        } else if (this.state.pass.length == 0 ){
             this.setState({error: {email:'', userName:'', pass:'ingrese contraseña'}})
             return
+
+        } else if (this.state.userName.length == 0){
+            this.setState({error: {email:'', userName:'ingrese nombre', pass:''}})
+            return
         }
+
         this.setState({error:{email:'', userName:'', pass:''}})
         
         auth.createUserWithEmailAndPassword(email,pass)

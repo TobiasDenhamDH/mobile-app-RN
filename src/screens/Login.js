@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, CheckBox } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, CheckBox} from 'react-native'
 import { auth } from '../firebase/config'
 import Loader from '../components/Loader'
 
