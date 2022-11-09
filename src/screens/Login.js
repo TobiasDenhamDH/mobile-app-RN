@@ -122,7 +122,7 @@ export default class Login extends Component {
                     onPress={()=>{this.props.navigation.navigate("Register")}}
                     style={styles.button}
                 >
-                    <Text style={styles.buttonText}>Registrate</Text>
+                    <Text style={styles.buttonText}>No tengo cuenta</Text>
                 </TouchableOpacity>
             </View>
         )

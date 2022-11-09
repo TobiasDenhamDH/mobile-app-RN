@@ -33,7 +33,7 @@ export default class Register extends Component {
 
            
 
-    register(email,pass,userName){
+    register(email,pass,userName,bio){
 
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
             this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
