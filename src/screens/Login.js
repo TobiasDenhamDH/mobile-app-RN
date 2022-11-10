@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, CheckBox} from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
 import { auth } from '../firebase/config'
 import Loader from '../components/Loader'
 
@@ -13,7 +13,6 @@ export default class Login extends Component {
             loading:true,
             email:'',
             pass:'',
-            remember:false,
             errorMensaje:'',
             error: {
                 email:'',
@@ -23,18 +22,11 @@ export default class Login extends Component {
     }
 
     componentDidMount(){
-        console.log(this.state.remember)
-        if(this.state.remember == true) {
             auth.onAuthStateChanged(user => {
             if(user){
                 this.props.navigation.navigate('Menu')
-       
-            }
-        })} 
-        else {
-                this.props.navigation.navigate('Login')
-          
-        }
+            }     
+        })
         this.setState({loading:false})
     }
 
@@ -68,11 +60,13 @@ export default class Login extends Component {
 
         return (
             this.state.loading? <Loader/> :
+
             <View style={styles.container}>
+
                 <Text style={styles.text}><strong>Inicio de sesión</strong></Text>
+
                 <View>
 
-                
                     <TextInput
                         style={styles.campo}
                         keyboardType='email-address'
@@ -81,6 +75,7 @@ export default class Login extends Component {
                         value={this.state.email}
 
                     />
+
                      <Text style={styles.errorText}>
                     {this.state.error.email && 'La dirección de email es obligatoria'}
                     </Text>
@@ -93,37 +88,40 @@ export default class Login extends Component {
                         onChangeText={userPass=>this.setState({pass:userPass})}
                         value={this.state.pass}
                     />
+
                     <Text style={styles.errorText}>
                     {this.state.error.pass && 'La contraseña es obligatoria'}
                     </Text>
+
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
+
                 </View>
 
-                <View style={styles.checkboxContainer}>
-                    
-                <CheckBox
-                    value={this.state.remember}
-                    onValueChange={()=>this.setState({
-                        remember:!this.state.remember
-                    })}
-                    style={styles.checkbox}
-                />
-                <Text style={styles.label}>Remember me</Text>
-             </View>
-    
-
+                {this.state.email.length == 0 || this.state.pass.length == 0?
+ 
+                <TouchableOpacity 
+                    onPress={()=>{this.login(this.state.email, this.state.pass)}}
+                    style={styles.button2}
+                >
+                    <Text style={styles.buttonText}>Iniciar sesión</Text>
+                </TouchableOpacity>
+                  :  
                 <TouchableOpacity 
                     onPress={()=>{this.login(this.state.email, this.state.pass)}}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Iniciar sesión</Text>
                 </TouchableOpacity>
+                }
+               
                 <TouchableOpacity 
                     onPress={()=>{this.props.navigation.navigate("Register")}}
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>No tengo cuenta</Text>
                 </TouchableOpacity>
+                
+
             </View>
         )
     }
@@ -152,11 +150,21 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginHorizontal:16,
+        maxWidth: 280
     },
 
     button: {
         padding:8,
         backgroundColor:'#552586',
+        borderRadius:8,
+        textAlign:'center',
+        marginVertical:8,
+        marginHorizontal:16,
+        width:280
+    },
+    button2: {
+        padding:8,
+        backgroundColor:'grey',
         borderRadius:8,
         textAlign:'center',
         marginVertical:8,

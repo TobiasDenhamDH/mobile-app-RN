@@ -146,7 +146,17 @@ export default class Register extends Component {
                     </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
                 </View>
-     
+
+                {this.state.email.length == 0 || this.state.pass.length == 0 || this.state.userName.length == 0?
+
+                <TouchableOpacity 
+                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
+                    
+                    style={styles.button2}
+                >
+                    <Text style={styles.buttonText}>Registrarme</Text>
+                </TouchableOpacity>
+                :
                 <TouchableOpacity 
                     onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
                     
@@ -154,7 +164,9 @@ export default class Register extends Component {
                 >
                     <Text style={styles.buttonText}>Registrarme</Text>
                 </TouchableOpacity>
-                
+
+                }
+
                 <TouchableOpacity 
                     onPress={()=>{this.props.navigation.navigate("Login")}}
                     style={styles.button}
@@ -189,6 +201,7 @@ const styles = StyleSheet.create({
     errorText: {
         color: 'red',
         marginHorizontal:16,
+        maxWidth: 280
     },
 
     button: {
