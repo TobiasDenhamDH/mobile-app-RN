@@ -1,7 +1,9 @@
-import React, { Component } from 'react'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
-import { auth, db } from '../firebase/config'
-import Loader from '../components/Loader'
+import React, { Component } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image } from 'react-native';
+import { auth, db, storage} from '../firebase/config';
+// import {getStorage, ref, uploadBytes} from '../firebase/config/storage'
+import * as ImagePicker from 'expo-image-picker';
+import Loader from '../components/Loader';
 
 
 export default class Register extends Component {
@@ -18,12 +20,18 @@ export default class Register extends Component {
                 email:'',
                 userName:'',
                 pass:''
-            }
-            
+            },
+            image: '',
+            permission: true
         }
     }
 
     componentDidMount(){
+        // ImagePicker.getMediaLibraryPermissionsAsync()
+        // .then(()=>this.setState({
+        //     permission:true
+        // }))
+        // .catch(err=>console.log(err))
 
             this.setState({
                 loading:false
@@ -33,7 +41,7 @@ export default class Register extends Component {
 
            
 
-    register(email,pass,userName,bio){
+    register(email,pass,userName,bio, image){
 
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
             this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
@@ -65,6 +73,15 @@ export default class Register extends Component {
         }
 
         this.setState({error:{email:'', userName:'', pass:''}})
+
+        // let getStorage = getStorage()
+        // let imagePerfil = ref(getStorage, this.state.image)
+        // let imageRef = ref(getStorage,`fotoperfil/${Date.now()}.jpg`)
+
+        // uploadBytes(imageRef,imagePerfil).then((snapshot)=>{
+        //     console.log('se subio el archivo')
+        // }
+        // )
         
         auth.createUserWithEmailAndPassword(email,pass)
         .then((res)=> {
@@ -73,7 +90,8 @@ export default class Register extends Component {
                 email:email,
                 userName:userName,
                 bio:bio,
-                posts:[]
+                posts:[],
+                image: image
             })
             console.log(res)
             res.user.updateProfile({
@@ -84,7 +102,8 @@ export default class Register extends Component {
                 email:'',
                 pass:'',
                 userName:'',
-                bio:''
+                bio:'',
+                image:''
             })
             this.props.navigation.navigate('Login')
         })
@@ -94,10 +113,27 @@ export default class Register extends Component {
             })
         })
     }
+
+    elegirImagen(){
+
+        let image = ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        })
+        .then((res) => {
+            if (!image.cancelled) {
+                this.setState({image: image.uri})
+            }
+            console.log(this.state.image)
+        })
+    }
     
     render() {
         return (
             this.state.loading ? <Loader/> : 
+
             <View style={styles.container}>
                     
                 <Text style={styles.text}><strong>Registro</strong></Text>
@@ -120,7 +156,7 @@ export default class Register extends Component {
                             placeholder='Biografía'
                             onChangeText={bio=>this.setState({bio:bio})}
                             value={this.state.bio}
-                        />
+                    />
                     <TextInput
                         style={styles.campo}
                         keyboardType='email-address'
@@ -145,6 +181,15 @@ export default class Register extends Component {
                     {this.state.error.pass && 'La contraseña es obligatoria'}
                     </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
+                    {this.state.permission &&
+                    <Button 
+                        style={styles.campo}
+                        title= 'Elegí tu foto de perfil'
+                        onPress={()=>{this.elegirImagen()}}
+                    >
+                    {this.state.image && <Image source={{uri: this.state.image}} style={{width: 200, height: 200}}/>}
+                    </Button>
+    }
                 </View>
 
                 {this.state.email.length == 0 || this.state.pass.length == 0 || this.state.userName.length == 0?
@@ -158,7 +203,7 @@ export default class Register extends Component {
                 </TouchableOpacity>
                 :
                 <TouchableOpacity 
-                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
+                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio, this.state.image)}}
                     
                     style={styles.button}
                 >
