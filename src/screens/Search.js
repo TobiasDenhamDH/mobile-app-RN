@@ -12,7 +12,8 @@ export default class Search extends Component {
             loading:true,
             users: [],
             resultados: [],
-            filterBy:''
+            filterBy:'',
+            busqueda: false
         }
     }
 
@@ -38,7 +39,10 @@ export default class Search extends Component {
             let resultadosFiltrados = this.state.users.filter((user) => {return user.data.userName.toLowerCase().includes(filtro.toLowerCase())})
             this.setState({resultados: resultadosFiltrados})
             console.log(resultadosFiltrados)  
-            this.setState({filterBy: ''})   
+            this.setState({
+                filterBy: '',
+                busqueda: true
+        })   
         }else{
             this.setState({resultados:[]})
         } 
@@ -88,7 +92,7 @@ export default class Search extends Component {
 
             :
 
-            this.state.filterBy &&
+            this.state.busqueda &&
 
             <View>
                 <Text style={styles.leyenda}>No hubo coincidencias con la búsqueda</Text>
