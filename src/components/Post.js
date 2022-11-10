@@ -17,7 +17,6 @@ export default class Post extends Component  {
     }
 
     componentDidMount(){
-        console.log(this.props.post)
         this.setState({
             likes: this.props.post.data.likes || [],
           })

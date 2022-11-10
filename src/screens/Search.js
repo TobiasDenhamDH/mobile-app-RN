@@ -78,7 +78,7 @@ export default class Search extends Component {
                         onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
                     >
                         <div style={styles.listadoUsers}>
-                        <FontAwesome name="user-circle" size={30} color="black" />
+                        <FontAwesome name="user-circle" size={40} color="black" />
                         <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
                         </div>
                     </TouchableOpacity>}
@@ -131,6 +131,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         marginLeft: 38,
+        marginTop: 5
     },
     text: {
         fontSize: 20,
@@ -140,6 +141,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center'
     },
     userName: {
+        fontSize: 15,
         paddingLeft: 15,
         alignSelf: 'center'
     }
