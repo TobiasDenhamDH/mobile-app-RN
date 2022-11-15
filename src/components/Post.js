@@ -19,7 +19,7 @@ export default class Post extends Component  {
     componentDidMount(){
         this.setState({
             likes: this.props.post.data.likes || [],
-          })
+        })
     }
 
     borrarLikes() {
@@ -46,14 +46,12 @@ export default class Post extends Component  {
         .catch(err => console.log(err))
     }
 
-    comentar() {
-        console.log("comente")
-    }
-
     render() {
+        // falta que se muestre bien la foto de perfil en home pero no rompe
     return (
         <>
             <View style={styles.container}>
+                <Image source={{uri: this.props.post.ownerPic}} style={styles.fotoPerfil}/>
                 <Text style={styles.text2}><strong>@{this.props.post.data.owner}</strong></Text>
                 <Image 
                     source={{uri:this.props.post.data.uri}}
@@ -75,15 +73,13 @@ export default class Post extends Component  {
 
                     <TouchableOpacity 
                      style={styles.comment}
-                    onPress={(comment)=>{this.comentar(comment)}}
+                    onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
 
                     >
                     <FontAwesome name="comment-o" size={24} color="black" />
                     </TouchableOpacity>
 
                 </View>
-
-                    
                 :
                 <View style={styles.container2}>
                     <TouchableOpacity 
@@ -96,7 +92,7 @@ export default class Post extends Component  {
 
                     <TouchableOpacity 
                     style={styles.comment}
-                    onPress={(comment)=>{this.comentar(comment)}}
+                    onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
 
                     >
                     <FontAwesome name="comment-o" size={24} color="black" />
@@ -129,7 +125,6 @@ const styles = StyleSheet.create({
 
     container: {
         padding:0,
-        backgroundColor:'white',
         textAlign:'left',
     },
     container2: {
@@ -155,5 +150,10 @@ const styles = StyleSheet.create({
         color: 'black',
         marginHorizontal:6,
         marginTop: 15
-    }
+    },
+    fotoPerfil: {
+        height: 50,
+        width: 50,
+        borderRadius: 50
+    } 
 })

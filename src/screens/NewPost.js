@@ -59,6 +59,7 @@ export default class NewPost extends Component {
             likes:[],
             comments:[],
             uri:this.state.uri,
+            ownerPic: this.state.userActivo.data.image,
             createdAt: Date.now()
         })
         .then((res)=>{

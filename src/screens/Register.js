@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Button, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { auth, db, storage} from '../firebase/config';
 // import {getStorage, ref, uploadBytes} from '../firebase/config/storage'
 import * as ImagePicker from 'expo-image-picker';
@@ -22,26 +22,17 @@ export default class Register extends Component {
                 pass:''
             },
             image: '',
-            permission: true
+            permission: false
         }
     }
 
     componentDidMount(){
-        // ImagePicker.getMediaLibraryPermissionsAsync()
-        // .then(()=>this.setState({
-        //     permission:true
-        // }))
-        // .catch(err=>console.log(err))
+        this.setState({
+            loading:false
+        })
+    }
 
-            this.setState({
-                loading:false
-            })
-        
-        }
-
-           
-
-    register(email,pass,userName,bio, image){
+    register(email,pass,userName,bio,image){
 
         if (this.state.userName.length == 0 && this.state.email.length == 0  && this.state.pass.length == 0){
             this.setState({error: {email:'ingrese email', userName:'ingrese nombre', pass: 'ingrese contraseña'}})
@@ -74,14 +65,16 @@ export default class Register extends Component {
 
         this.setState({error:{email:'', userName:'', pass:''}})
 
-        // let getStorage = getStorage()
-        // let imagePerfil = ref(getStorage, this.state.image)
-        // let imageRef = ref(getStorage,`fotoperfil/${Date.now()}.jpg`)
-
-        // uploadBytes(imageRef,imagePerfil).then((snapshot)=>{
-        //     console.log('se subio el archivo')
-        // }
-        // )
+        fetch(this.state.image)
+        .then(res=>res.blob())
+        .then(image=>{
+            const ref = storage.ref(`perfil/${Date.now()}.jpg`)
+            ref.put(image)
+            .then(()=>{
+                ref.getDownloadURL()
+            })
+        })
+        .catch(err=>console.log(err))
         
         auth.createUserWithEmailAndPassword(email,pass)
         .then((res)=> {
@@ -96,7 +89,7 @@ export default class Register extends Component {
             console.log(res)
             res.user.updateProfile({
                 displayName: userName,
-              })
+            })
 
             this.setState({
                 email:'',
@@ -115,7 +108,12 @@ export default class Register extends Component {
     }
 
     elegirImagen(){
-
+        ImagePicker.requestMediaLibraryPermissionsAsync() // no funciona el permiso
+        .then(()=>this.setState({
+            permission: true
+        }))
+        .catch(err=>console.log(err))
+        
         let image = ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -123,10 +121,12 @@ export default class Register extends Component {
             quality: 1,
         })
         .then((res) => {
+            console.log(res);
             if (!image.cancelled) {
-                this.setState({image: image.uri})
+                this.setState({image: res.assets[0].uri}, () => {
+                    console.log(this.state.image)
+                })
             }
-            console.log(this.state.image)
         })
     }
     
@@ -145,11 +145,11 @@ export default class Register extends Component {
                             placeholder='Nombre de usuario'
                             onChangeText={userName=>this.setState({userName:userName})}
                             value={this.state.userName}
+                    />
+                    <Text style={styles.errorText}>
+                    {this.state.error.userName && 'El nombre de usuario es obligatorio'}
+                    </Text>
 
-                        />
-                        <Text style={styles.errorText}>
-                        {this.state.error.userName && 'El nombre de usuario es obligatorio'}
-                        </Text>
                     <TextInput
                             style={styles.campo}
                             keyboardType='default'
@@ -157,17 +157,18 @@ export default class Register extends Component {
                             onChangeText={bio=>this.setState({bio:bio})}
                             value={this.state.bio}
                     />
+
                     <TextInput
                         style={styles.campo}
                         keyboardType='email-address'
                         placeholder='Dirección de email'
                         onChangeText={userEmail=>this.setState({email:userEmail})}
                         value={this.state.email}
-
                     />
                     <Text style={styles.errorText}>
                     {this.state.error.email && 'La dirección de email es obligatoria'}
                     </Text>
+
                     <TextInput
                         style={styles.campo}
                         keyboardType='default'
@@ -175,41 +176,39 @@ export default class Register extends Component {
                         secureTextEntry
                         onChangeText={userPass=>this.setState({pass:userPass})}
                         value={this.state.pass}
-
                     />
                     <Text style={styles.errorText}>
                     {this.state.error.pass && 'La contraseña es obligatoria'}
                     </Text>
                     <Text style={styles.errorText}>{this.state.errorMensaje}</Text>
-                    {this.state.permission &&
-                    <Button 
+        
+                    <TouchableOpacity 
                         style={styles.campo}
-                        title= 'Elegí tu foto de perfil'
                         onPress={()=>{this.elegirImagen()}}
                     >
-                    {this.state.image && <Image source={{uri: this.state.image}} style={{width: 200, height: 200}}/>}
-                    </Button>
-    }
+                        <Text style={styles.perfil}>Elegí tu foto de perfil</Text>
+                    {/* {this.state.image && <Image source={{uri: this.state.image}} style={{width: 200, height: 200}}/>} */}
+                    </TouchableOpacity>
+    
                 </View>
 
                 {this.state.email.length == 0 || this.state.pass.length == 0 || this.state.userName.length == 0?
 
                 <TouchableOpacity 
                     onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
-                    
                     style={styles.button2}
                 >
                     <Text style={styles.buttonText}>Registrarme</Text>
                 </TouchableOpacity>
+
                 :
+
                 <TouchableOpacity 
                     onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio, this.state.image)}}
-                    
                     style={styles.button}
                 >
                     <Text style={styles.buttonText}>Registrarme</Text>
                 </TouchableOpacity>
-
                 }
 
                 <TouchableOpacity 
@@ -225,12 +224,11 @@ export default class Register extends Component {
 }
 
 const styles = StyleSheet.create({
-
     container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
     },
     campo: {
         fontSize:16,
@@ -248,7 +246,6 @@ const styles = StyleSheet.create({
         marginHorizontal:16,
         maxWidth: 280
     },
-
     button: {
         padding:8,
         backgroundColor: '#552586',
@@ -267,16 +264,18 @@ const styles = StyleSheet.create({
         marginHorizontal:16,
         width:280
     },
-
     buttonText: {
         fontSize:24,
         color:'#FAFAFA',
     },
-
     text: {
         fontSize: 30,
         color: 'black',
         marginHorizontal:16,
         marginBottom:10
+    },
+    perfil: {
+        fontSize: 16,
+        alignSelf: 'center'
     }
 })

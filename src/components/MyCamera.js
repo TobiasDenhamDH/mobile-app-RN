@@ -60,8 +60,6 @@ export default class MyCamera extends Component {
         })
     }
 
-
-
     render() {
         return (
             <View  style={styles.cameraBody}>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList} from 'react-native';
+import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, Image} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { db } from '../firebase/config';
 import { FontAwesome } from '@expo/vector-icons';
@@ -27,8 +27,8 @@ export default class Search extends Component {
     
         })
             this.setState({
-            users: users,
-            loading:false,
+                users: users,
+                loading:false,
             })
         })
     }
@@ -82,7 +82,8 @@ export default class Search extends Component {
                         onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
                     >
                         <div style={styles.listadoUsers}>
-                        <FontAwesome name="user-circle" size={40} color="black" />
+                        <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
+                        {/* <FontAwesome name="user-circle" size={40} color="black" /> */}
                         <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
                         </div>
                     </TouchableOpacity>}
@@ -148,5 +149,10 @@ const styles = StyleSheet.create({
         fontSize: 15,
         paddingLeft: 15,
         alignSelf: 'center'
-    }
+    },
+    fotoPerfil: {
+        height: 50,
+        width: 50,
+        borderRadius: 50
+    }  
 })

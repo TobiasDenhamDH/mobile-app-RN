@@ -26,27 +26,23 @@ export default class Home extends Component {
             docs.forEach(doc=>{
             posts.push( {
                 id:doc.id, data:doc.data()})
-
-    
         })
         this.setState({
             posts: posts,
             loading:false
           })
-        })
-          
-}
+        })   
+    }
 
     render() {
         return (
                 this.state.loading? <Loader/> :
                 <ScrollView>
-                    {/* <Text style={styles.text}><strong>Bienvenido, {auth.currentUser.email}</strong></Text>  */}
 
                 <FlatList
                     data={this.state.posts}
                     keyExtractor={item=>item.id.toString()}
-                    renderItem={({item})=><Post post={item}/>}
+                    renderItem={({item})=><Post post={item} {...this.props}/>} // para pasar las props de navegación del home a los posteos porque no es otra pantalla
                 >   </FlatList>
 
                 </ScrollView>
