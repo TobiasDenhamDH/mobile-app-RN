@@ -81,11 +81,11 @@ export default class Search extends Component {
                     <TouchableOpacity 
                         onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
                     >
-                        <div style={styles.listadoUsers}>
+                        <View style={styles.listadoUsers}>
                         <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
                         {/* <FontAwesome name="user-circle" size={40} color="black" /> */}
                         <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
-                        </div>
+                        </View>
                     </TouchableOpacity>}
             >
             </FlatList>

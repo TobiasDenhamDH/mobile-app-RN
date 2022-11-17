@@ -72,6 +72,9 @@ export default class Register extends Component {
             ref.put(image)
             .then(()=>{
                 ref.getDownloadURL()
+                .then((image)=>{
+                    this.onImageUpload(image)
+                })
             })
         })
         .catch(err=>console.log(err))
@@ -107,8 +110,14 @@ export default class Register extends Component {
         })
     }
 
+    onImageUpload(image){
+        this.setState({
+            image: image,
+        })
+    }
+
     elegirImagen(){
-        ImagePicker.requestMediaLibraryPermissionsAsync() // no funciona el permiso
+        ImagePicker.getMediaLibraryPermissionsAsync() // no funciona el permiso
         .then(()=>this.setState({
             permission: true
         }))
@@ -123,7 +132,7 @@ export default class Register extends Component {
         .then((res) => {
             console.log(res);
             if (!image.cancelled) {
-                this.setState({image: res.assets[0].uri}, () => {
+                this.setState({image: image}, () => {
                     console.log(this.state.image)
                 })
             }
