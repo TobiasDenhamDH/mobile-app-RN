@@ -68,18 +68,30 @@ export default class Comments extends Component {
 
                     <Text style={styles.text}><strong>Agregar Comentario</strong></Text>
 
+                    {this.state.comments.length ?
                     <FlatList
                         data={this.state.comments}
                         keyExtractor={item=>item.createdAt} // sirve para identificar cada elemento de la iteración
                         ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
                         renderItem={({item})=>
                         <View style={styles.listadoComentario}>
-                            <Image source={{uri: item.image}} style={styles.fotoPerfil}/>
-                            {/* <FontAwesome name="user-circle" size={40} color="black" /> */}
+                            {item.image ?
+                                <Image source={{uri: item.image}} style={styles.fotoPerfil}/>
+                            :
+                                <FontAwesome name="user-circle" size={40} color="black" />
+                            }
                             <Text style={styles.userName}><strong>{item.owner}</strong></Text>
                             <Text style={styles.textoComentario}>{item.text}</Text>
                         </View>}
                     >   </FlatList>
+
+                    :
+                    
+                    <View>
+                        <Text style={styles.leyenda}>Aún no hay comentarios</Text>
+                    </View>
+
+                    }
 
                     <TextInput
                         style={styles.campo}
@@ -141,6 +153,10 @@ const styles = StyleSheet.create({
         color: 'black',
         marginBottom: 30,
         marginTop: 10,
+        alignSelf: 'center'
+    },
+    leyenda: {
+        color: 'red',
         alignSelf: 'center'
     },
     listadoComentario: {

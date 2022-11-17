@@ -82,8 +82,11 @@ export default class Search extends Component {
                         onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
                     >
                         <View style={styles.listadoUsers}>
-                        <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
-                        {/* <FontAwesome name="user-circle" size={40} color="black" /> */}
+                        {item.data.image ?
+                            <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
+                        :
+                            <FontAwesome name="user-circle" size={40} color="black" />
+                        }
                         <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
                         </View>
                     </TouchableOpacity>}

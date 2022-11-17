@@ -72,8 +72,9 @@ export default class Register extends Component {
             ref.put(image)
             .then(()=>{
                 ref.getDownloadURL()
-                .then((image)=>{
+                .then(()=>{
                     this.onImageUpload(image)
+                    console.log(this.state.image)
                 })
             })
         })
@@ -111,9 +112,8 @@ export default class Register extends Component {
     }
 
     onImageUpload(image){
-        this.setState({
-            image: image,
-        })
+        this.setState({image: image.assets[0].uri}, () => {console.log(this.state.image)}
+        ) 
     }
 
     elegirImagen(){
@@ -129,14 +129,16 @@ export default class Register extends Component {
             aspect: [4, 3],
             quality: 1,
         })
-        .then((res) => {
-            console.log(res);
-            if (!image.cancelled) {
-                this.setState({image: image}, () => {
-                    console.log(this.state.image)
-                })
-            }
-        })
+        console.log(image)
+        //.then((res) => {
+            //console.log(res);
+            //if (!image.cancelled) {
+            //     this.onImageUpload(image)
+            //     this.setState({image: image}, () => {
+            //         console.log(this.state.image)
+            //     })
+            //}
+        //})
     }
     
     render() {
@@ -204,7 +206,7 @@ export default class Register extends Component {
                 {this.state.email.length == 0 || this.state.pass.length == 0 || this.state.userName.length == 0?
 
                 <TouchableOpacity 
-                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio)}}
+                    onPress={()=>{this.register(this.state.email, this.state.pass, this.state.userName, this.state.bio, this.state.image)}}
                     style={styles.button2}
                 >
                     <Text style={styles.buttonText}>Registrarme</Text>
