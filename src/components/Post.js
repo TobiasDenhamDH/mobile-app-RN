@@ -47,7 +47,7 @@ export default class Post extends Component  {
     }
 
     render() {
-        // falta que se muestre bien la foto de perfil en home pero no rompe
+    
     return (
         <>
             <View style={styles.container}>
@@ -58,7 +58,7 @@ export default class Post extends Component  {
                         <FontAwesome name="user-circle" size={40} color="black" />
                 }
 
-                <Text style={styles.text2}><strong>@{this.props.post.data.owner}</strong></Text>
+                <Text style={styles.text2}><strong>{this.props.post.data.owner}</strong></Text>
                 </View>
 
                 <Image 
@@ -108,7 +108,7 @@ export default class Post extends Component  {
                 </View>
                 }
 
-                <Text style={styles.text}>{this.props.post.data.description}</Text>
+                <Text style={styles.text}><strong>{this.props.post.data.owner}</strong> {this.props.post.data.description}</Text>
                 
                 {!this.state.likes.length?             
                 <Text style={styles.text} >No hay likes</Text>          
@@ -118,13 +118,24 @@ export default class Post extends Component  {
                 <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} {} y {this.state.likes.length -1} más</Text>
             }
 
-            {!this.state.comments.length?
+            {!this.props.post.data.comments.length?
+               
             <Text style={styles.text} >No hay comentarios</Text>
-            : this.state.comments.length == 1?              
-            <Text style={styles.text} >Ver el comentario</Text>    
-            :
-            <Text style={styles.text} >Ver los {this.state.comments.length} comentarios</Text>
+
+            : this.props.post.data.comments.length == 1?     
             
+            <TouchableOpacity 
+                onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
+            >
+            <Text style={styles.text}>Ver el comentario</Text> 
+            </TouchableOpacity>
+
+            :
+            <TouchableOpacity 
+                onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
+            >
+            <Text style={styles.text} >Ver los {this.props.post.data.comments.length} comentarios</Text>
+            </TouchableOpacity>
             }    
             </View>
         </>
@@ -171,11 +182,12 @@ const styles = StyleSheet.create({
     text2: {
         color: 'black',
         marginHorizontal:6,
-        marginTop: 15
+        marginTop: 15,
+      
     },
     fotoPerfil: {
-        height: 50,
-        width: 50,
+        height: 40,
+        width: 40,
         borderRadius: 50
     } 
 })

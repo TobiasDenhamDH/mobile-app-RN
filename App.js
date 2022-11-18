@@ -16,7 +16,7 @@ export default function App() {
         <Stack.Screen name='Login' component={Login} options={{headerShown:false}}/>
         <Stack.Screen name='Register' component={Register} options={{headerShown:false}}/>
         <Stack.Screen name='Menu' component={Menu} options={{headerShown:false}}/>
-        <Stack.Screen name='Comments' component={Comments} options={{headerShown:true}}/>
+        <Stack.Screen name='Comments' component={Comments} options={{headerShown:true, headerStyle: {backgroundColor: '#552586'}, headerTintColor: '#fff', headerTitleStyle: {fontWeight: 'bold'}}}/>
       </Stack.Navigator>
 
     </NavigationContainer>

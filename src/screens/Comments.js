@@ -89,7 +89,7 @@ export default class Comments extends Component {
                     :
                     
                     <View>
-                        <Text style={styles.leyenda}>Aún no hay comentarios</Text>
+                        <Text style={styles.leyenda}>Aún no hay comentarios. ¡Sé el primero en comentar!</Text>
                     </View>
 
                     }
