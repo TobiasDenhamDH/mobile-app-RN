@@ -20,7 +20,6 @@ export default class Post extends Component  {
         this.setState({
             likes: this.props.post.data.likes || [],
         })
-        console.log(this.props.post)
     }
 
     borrarLikes() {
@@ -52,6 +51,11 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
+            {this.props.post.ownerPic ?
+                                <Image source={{uri: this.props.post.ownerPic}} style={styles.fotoPerfil}/>
+                            :
+                                <FontAwesome name="user-circle" size={40} color="black" />
+                            }
                 {/* <Image source={{uri: this.props.post.ownerPic}} resizeMode="contain" style={styles.fotoPerfil}/> */}
                 <Text style={styles.text2}><strong>@{this.props.post.data.owner}</strong></Text>
                 <Image 

@@ -34,7 +34,6 @@ export default class NewPost extends Component {
                     })
 
                 }
-                console.log(this.state.userActivo)
                 this.setState({
                     loading:false
                 })

@@ -74,7 +74,7 @@ export default class Register extends Component {
                 ref.getDownloadURL()
                 .then(()=>{
                     this.onImageUpload(image)
-                    console.log(this.state.image)
+
                 })
             })
         })
@@ -90,7 +90,7 @@ export default class Register extends Component {
                 posts:[],
                 image: image
             })
-            console.log(res)
+
             res.user.updateProfile({
                 displayName: userName,
             })
@@ -112,7 +112,7 @@ export default class Register extends Component {
     }
 
     onImageUpload(image){
-        this.setState({image: image.assets[0].uri}, () => {console.log(this.state.image)}
+        this.setState({image: image}, () => {console.log(this.state.image)}
         ) 
     }
 
@@ -129,16 +129,13 @@ export default class Register extends Component {
             aspect: [4, 3],
             quality: 1,
         })
-        console.log(image)
-        //.then((res) => {
-            //console.log(res);
-            //if (!image.cancelled) {
-            //     this.onImageUpload(image)
-            //     this.setState({image: image}, () => {
-            //         console.log(this.state.image)
-            //     })
-            //}
-        //})
+        .then((res) => {
+
+            if (!image.cancelled) {
+                this.setState({image: res.assets[0].uri})
+                
+            }
+        })
     }
     
     render() {

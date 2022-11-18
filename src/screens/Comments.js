@@ -10,7 +10,7 @@ export default class Comments extends Component {
         super()
         this.state={
             loading:true,
-            users: [],
+            user: {},
             comments: [],
             commentText:''
         }
@@ -18,22 +18,23 @@ export default class Comments extends Component {
 
     componentDidMount(){
         db.collection('posts').doc(this.props.route.params.id).onSnapshot(doc=>{
-            console.log(this.props.route.params.id)
+ 
             this.setState({
                 loading:false,
                 comments: doc.data().comments
             })
         })
-        db.collection('users').onSnapshot(docs=>{
-            let users = [];
+        db.collection('users')
+        .where('userName', '==', auth.currentUser.displayName)
+        .onSnapshot(docs=>{
+            let user = {};
             docs.forEach(doc=>{
-            users.push( {
+            user = ( {
                 id:doc.id, 
                 data:doc.data()})
-    
         })
             this.setState({
-            users: users,
+            user: user,
             })
         })
     }
@@ -47,7 +48,7 @@ export default class Comments extends Component {
                 comments: firebase.firestore.FieldValue.arrayUnion({
                     owner: auth.currentUser.displayName,
                     text: this.state.commentText,
-                    image: this.state.users[1].data.image, // hay que ver como generalizar para que muestre la foto de todos los usuarios que comentan
+                    image: this.state.user.data.image, // hay que ver como generalizar para que muestre la foto de todos los usuarios que comentan
                     createdAt: Date.now()
                 })
             })
