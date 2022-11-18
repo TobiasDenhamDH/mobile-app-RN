@@ -45,6 +45,7 @@ export default class NewPost extends Component {
     }
 
     crearPost(){
+        console.log(this.state.userActivo.data.image)
         db.collection('users').doc(this.state.userActivo.id).update({
                 
             posts: firebase.firestore.FieldValue.arrayUnion(this.state.description)

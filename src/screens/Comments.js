@@ -48,7 +48,7 @@ export default class Comments extends Component {
                 comments: firebase.firestore.FieldValue.arrayUnion({
                     owner: auth.currentUser.displayName,
                     text: this.state.commentText,
-                    image: this.state.user.data.image, // hay que ver como generalizar para que muestre la foto de todos los usuarios que comentan
+                    image: this.state.user.data.image,
                     createdAt: Date.now()
                 })
             })

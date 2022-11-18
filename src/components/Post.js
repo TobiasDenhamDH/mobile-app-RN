@@ -51,21 +51,22 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
-            {this.props.post.ownerPic ?
-                                <Image source={{uri: this.props.post.ownerPic}} style={styles.fotoPerfil}/>
-                            :
-                                <FontAwesome name="user-circle" size={40} color="black" />
-                            }
-                {/* <Image source={{uri: this.props.post.ownerPic}} resizeMode="contain" style={styles.fotoPerfil}/> */}
+                <View style={styles.container3}>
+                {this.props.post.data.ownerPic ?
+                        <Image source={{uri: this.props.post.data.ownerPic}} style={styles.fotoPerfil}/>
+                    :
+                        <FontAwesome name="user-circle" size={40} color="black" />
+                }
+
                 <Text style={styles.text2}><strong>@{this.props.post.data.owner}</strong></Text>
+                </View>
+
                 <Image 
                     source={{uri:this.props.post.data.uri}}
                     resizeMode="contain"
                     style={styles.image}
                 
                 />
-                <Text style={styles.text}>{this.props.post.data.description}</Text>
-
 
                 {this.state.likes.includes(auth.currentUser.displayName)?
                 <View style={styles.container2}>
@@ -85,7 +86,9 @@ export default class Post extends Component  {
                     </TouchableOpacity>
 
                 </View>
+
                 :
+
                 <View style={styles.container2}>
                     <TouchableOpacity 
                         onPress={(like)=>{this.likear(like)}}
@@ -104,6 +107,8 @@ export default class Post extends Component  {
                     </TouchableOpacity>
                 </View>
                 }
+
+                <Text style={styles.text}>{this.props.post.data.description}</Text>
                 
                 {!this.state.likes.length?             
                 <Text style={styles.text} >No hay likes</Text>          
@@ -136,6 +141,15 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection:'row',
         marginHorizontal:6,
+        paddingLeft: 2,
+        paddingTop: 10, 
+    },
+    container3: {
+       display: 'flex',
+       flexDirection: 'row',
+       marginHorizontal: 6,
+       paddingTop: 10,
+       paddingBottom: 10
     },
     comment: {
         marginLeft: 10
@@ -150,6 +164,9 @@ const styles = StyleSheet.create({
     text: {
         color: 'black',
         marginHorizontal:6,
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 2
     },
     text2: {
         color: 'black',
