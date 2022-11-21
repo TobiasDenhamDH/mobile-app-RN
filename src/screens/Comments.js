@@ -81,7 +81,7 @@ export default class Comments extends Component {
                             :
                                 <FontAwesome name="user-circle" size={40} color="black" />
                             }
-                            <Text style={styles.userName}><strong>{item.owner}</strong></Text>
+                            <Text style={styles.userName}><strong>{item.owner.toLowerCase()}</strong></Text>
                             <Text style={styles.textoComentario}>{item.text}</Text>
                         </View>}
                     >   </FlatList>
@@ -102,12 +102,25 @@ export default class Comments extends Component {
                         value={this.state.commentText}
                     />
 
+                    {this.state.commentText?
+
                     <TouchableOpacity
-                        style={styles.buttonLogin}
+                        style={styles.button}
                         onPress={()=>{this.comentar(this.state.commentText)}}
                     >
                         <Text style={styles.buttonText}>Publicar</Text>
                     </TouchableOpacity>
+
+                    :
+
+                    <TouchableOpacity
+                        style={styles.button2}
+                        onPress={()=>{this.comentar(this.state.commentText)}}
+                    >
+                        <Text style={styles.buttonText}>Publicar</Text>
+                    </TouchableOpacity>
+
+                    }
 
                     </View>
                 </ScrollView>
@@ -136,9 +149,18 @@ const styles = StyleSheet.create({
         width:280,
         marginTop: 30
     },
-    buttonLogin: {
+    button: {
         padding:8,
-        backgroundColor:'#552586',
+        backgroundColor: '#552586',
+        borderRadius:8,
+        textAlign:'center',
+        marginVertical:8,
+        marginHorizontal:16,
+        width:280
+    },
+    button2: {
+        padding:8,
+        backgroundColor: 'grey',
         borderRadius:8,
         textAlign:'center',
         marginVertical:8,

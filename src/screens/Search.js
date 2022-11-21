@@ -85,7 +85,7 @@ export default class Search extends Component {
                         :
                             <FontAwesome name="user-circle" size={40} color="black" />
                         }
-                        <Text style={styles.userName}><strong>{item.data.userName}</strong></Text>
+                        <Text style={styles.userName}><strong>{item.data.userName.toLowerCase()}</strong></Text>
                         </View>
                     </TouchableOpacity>}
             >

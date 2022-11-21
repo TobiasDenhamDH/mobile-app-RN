@@ -24,7 +24,7 @@ export default class Post extends Component  {
 
     borrarLikes() {
         db.collection('posts').doc(this.props.post.id).update({
-            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.displayName)
+            likes: firebase.firestore.FieldValue.arrayRemove(auth.currentUser.displayName.toLowerCase())
         })
         .then((res) => {
             this.setState({
@@ -36,7 +36,7 @@ export default class Post extends Component  {
 
     likear(){
         db.collection('posts').doc(this.props.post.id).update({
-            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName)
+            likes: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.displayName.toLowerCase())
         })
         .then((res) => {
             this.setState({
@@ -51,6 +51,7 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
+                <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Mi perfil')}}>
                 <View style={styles.container3}>
                 {this.props.post.data.ownerPic ?
                         <Image source={{uri: this.props.post.data.ownerPic}} style={styles.fotoPerfil}/>
@@ -58,17 +59,18 @@ export default class Post extends Component  {
                         <FontAwesome name="user-circle" size={40} color="black" />
                 }
 
-                <Text style={styles.text2}><strong>{this.props.post.data.owner}</strong></Text>
+                <Text style={styles.text2}><strong>{this.props.post.data.owner.toLowerCase()}</strong></Text>
                 </View>
+                </TouchableOpacity>
 
                 <Image 
                     source={{uri:this.props.post.data.uri}}
-                    resizeMode="contain"
+                    resizeMode="cover"
                     style={styles.image}
                 
                 />
 
-                {this.state.likes.includes(auth.currentUser.displayName)?
+                {this.state.likes.includes(auth.currentUser.displayName.toLowerCase())?
                 <View style={styles.container2}>
                     <TouchableOpacity 
                         onPress={(borrarLike)=>{this.borrarLikes(borrarLike)}}
@@ -108,14 +110,14 @@ export default class Post extends Component  {
                 </View>
                 }
 
-                <Text style={styles.text}><strong>{this.props.post.data.owner}</strong> {this.props.post.data.description}</Text>
+                <Text style={styles.text}><strong>{this.props.post.data.owner.toLowerCase()}</strong> {this.props.post.data.description}</Text>
                 
                 {!this.state.likes.length?             
                 <Text style={styles.text} >No hay likes</Text>          
                 : this.state.likes.length == 1?              
                 <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} </Text>             
                 :
-                <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} {} y {this.state.likes.length -1} más</Text>
+                <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} y {this.state.likes.length -1} más</Text>
             }
 
             {!this.props.post.data.comments.length?
@@ -153,30 +155,34 @@ const styles = StyleSheet.create({
         flexDirection:'row',
         marginHorizontal:6,
         paddingLeft: 2,
-        paddingTop: 10, 
+        paddingTop: 4,
+        paddingBottom: 3 
     },
     container3: {
        display: 'flex',
        flexDirection: 'row',
        marginHorizontal: 6,
-       paddingTop: 10,
-       paddingBottom: 10
+       marginBottom: 4,
+       marginTop: 4,
+       paddingTop: 7,
+       paddingBottom: 7,
     },
     comment: {
         marginLeft: 10
     },
     image: {
         height:250,
-        padding:0
+        padding:0,
+        
     },
     icon: {
-        height: 20
+        height: 50
     },
     text: {
         color: 'black',
         marginHorizontal:6,
-        paddingTop: 10,
-        paddingBottom: 10,
+        paddingTop:3,
+        paddingBottom: 7,
         paddingLeft: 2
     },
     text2: {
@@ -186,8 +192,8 @@ const styles = StyleSheet.create({
       
     },
     fotoPerfil: {
-        height: 40,
-        width: 40,
+        height: 45,
+        width: 45,
         borderRadius: 50
     } 
 })

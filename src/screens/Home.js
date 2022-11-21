@@ -41,6 +41,7 @@ export default class Home extends Component {
 
                 <FlatList
                     data={this.state.posts}
+                    ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 400, alignSelf:'center'}}></View>)}
                     keyExtractor={item=>item.id.toString()}
                     renderItem={({item})=><Post post={item} {...this.props}/>} // para pasar las props de navegación del home a los posteos porque no es otra pantalla
                 >   </FlatList>
