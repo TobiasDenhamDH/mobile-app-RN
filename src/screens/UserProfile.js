@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import {  Text, View, TouchableOpacity, FlatList,ScrollView, StyleSheet, Image} from 'react-native';
+import {  Text, View, TouchableOpacity,ScrollView, StyleSheet, Image , FlatList} from 'react-native';
 import { db, auth } from '../firebase/config';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import Post from '../components/Post';
 import NewPost from './NewPost';
 
-export default class Profile extends Component {
+export default class UserProfile extends Component {
     constructor(props) {
         super(props)
         this.state={
@@ -20,7 +20,7 @@ export default class Profile extends Component {
     componentDidMount() {
 
         db.collection('users')
-        .where('email', '==', auth.currentUser.email)
+        .where('userName', '==', this.props.route.params.userName)
         .onSnapshot((docs) => {
             let usersFromDb = {};
             docs.forEach((doc) => {
@@ -36,10 +36,9 @@ export default class Profile extends Component {
                 loading:false
                 })
         })
-  
 
         db.collection('posts')
-        .where('owner', '==', auth.currentUser.displayName )
+        .where('owner', '==', this.props.route.params.userName)
         .onSnapshot((docs)=>{
             let posts = [];
             docs.forEach(doc=>{
@@ -54,23 +53,10 @@ export default class Profile extends Component {
    
           })
         })
+  
+
+       
     }
-
-
-    borrarPost (){
-         borrarPost = 
-        db 
-          .collection('posts')
-          .doc(id)
-          borrarPost.delete()
-    }
-    
-    logOut(){
-        auth.signOut();
-        this.props.navigation.navigate('Login')
-
-    }
-
 
     render() {
         return (
@@ -93,23 +79,14 @@ export default class Profile extends Component {
                     <Text style={styles.text3}>{this.state.user.data.email}</Text>                     
                     <Text style={styles.text3}>{this.state.user.data.bio}</Text>
                 </View>
-
-                <View style={styles.container4}>
-                    <TouchableOpacity onPress={()=> this.logOut()}>
-                        <Text style={styles.button}><strong>Cerrar sesión</strong></Text>
-                    </TouchableOpacity>
-                </View>
                     
                 {this.state.posts.length?
                  <>  
                 <View style={styles.container6}>
-                    <Text style={styles.text}><strong>Mis Posteos ({this.state.posts.length})</strong></Text>
-                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('Nuevo Posteo')}>
-                            <Entypo style= {styles.add} name="plus" size={30} color="black" />
-                        </TouchableOpacity>
+                    <Text style={styles.text}><strong> Posteos ({this.state.posts.length})</strong></Text>
                 </View>
 
-                <View>
+                    <View>
                     <FlatList
                         data={this.state.posts}
                         keyExtractor={item => item.id.toString()}
@@ -122,13 +99,8 @@ export default class Profile extends Component {
                 
                 <View style={styles.container6}>
                 <Text style={styles.text}><strong>Aún no tienes posteos</strong></Text>
-
-                
-                    <TouchableOpacity onPress={()=> this.props.navigation.navigate('Nuevo Posteo')}>
-                        <Entypo style= {styles.add} name="plus" size={30} color="black" />
-                    </TouchableOpacity>
-
                 </View>
+                
                
                 }
 

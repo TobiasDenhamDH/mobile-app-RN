@@ -77,7 +77,7 @@ export default class Search extends Component {
                     ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
                     renderItem={({item})=> 
                     <TouchableOpacity 
-                        onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
+                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : item.data.userName})}}
                     >
                         <View style={styles.listadoUsers}>
                         {item.data.image ?
