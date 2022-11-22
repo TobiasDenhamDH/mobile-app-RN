@@ -75,6 +75,9 @@ export default class Comments extends Component {
                         keyExtractor={item=>item.createdAt} // sirve para identificar cada elemento de la iteración
                         ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
                         renderItem={({item})=>
+                        <TouchableOpacity 
+                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : item.owner })}}
+                        >
                         <View style={styles.listadoComentario}>
                             {item.image ?
                                 <Image source={{uri: item.image}} style={styles.fotoPerfil}/>
@@ -83,7 +86,8 @@ export default class Comments extends Component {
                             }
                             <Text style={styles.userName}><strong>{item.owner.toLowerCase()}</strong></Text>
                             <Text style={styles.textoComentario}>{item.text}</Text>
-                        </View>}
+                        </View>
+                        </TouchableOpacity>}
                     >   </FlatList>
 
                     :

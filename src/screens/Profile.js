@@ -71,6 +71,14 @@ export default class Profile extends Component {
 
     }
 
+    deletePost(id){
+        const borrarPosteo = 
+        db 
+          .collection('posts')
+          .doc(id)
+          borrarPosteo.delete()
+      }
+
 
     render() {
         return (
@@ -113,7 +121,14 @@ export default class Profile extends Component {
                     <FlatList
                         data={this.state.posts}
                         keyExtractor={item => item.id.toString()}
-                        renderItem={({ item }) => <Post post={item} {...this.props} />}
+                        renderItem={({ item }) => 
+                        <>
+                        <Post post={item} {...this.props} />
+                        <TouchableOpacity   onPress={() => this.deletePost(item.id)}>
+                            <Text style={styles.button}><strong>Delete Post</strong></Text>
+                      </TouchableOpacity>
+                        </>
+                        }
                     /> 
                 </View>
                 </>

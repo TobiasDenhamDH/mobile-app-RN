@@ -51,7 +51,9 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
-                <TouchableOpacity onPress={()=>{this.props.navigation.navigate('Mi perfil')}}>
+                <TouchableOpacity 
+                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : this.props.post.data.owner})}}
+                    >
                 <View style={styles.container3}>
                 {this.props.post.data.ownerPic ?
                         <Image source={{uri: this.props.post.data.ownerPic}} style={styles.fotoPerfil}/>
