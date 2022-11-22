@@ -4,7 +4,7 @@ import { db, auth } from '../firebase/config';
 import { FontAwesome, Entypo } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import Post from '../components/Post';
-import NewPost from './NewPost';
+
 
 export default class Profile extends Component {
     constructor(props) {
@@ -18,14 +18,12 @@ export default class Profile extends Component {
 
 
     componentDidMount() {
-
         db.collection('users')
         .where('email', '==', auth.currentUser.email)
         .onSnapshot((docs) => {
             let usersFromDb = {};
             docs.forEach((doc) => {
             let user = doc.data()
-            console.log(user)
             usersFromDb = {
                 id: doc.id,
                 data: user,
@@ -35,8 +33,7 @@ export default class Profile extends Component {
                 user: usersFromDb, 
                 loading:false
                 })
-        })
-  
+        })  
 
         db.collection('posts')
         .where('owner', '==', auth.currentUser.displayName )
@@ -56,27 +53,14 @@ export default class Profile extends Component {
         })
     }
 
-
-    borrarPost (){
-         borrarPost = 
-        db 
-          .collection('posts')
-          .doc(id)
-          borrarPost.delete()
-    }
-    
     logOut(){
         auth.signOut();
         this.props.navigation.navigate('Login')
 
     }
 
-    deletePost(id){
-        const borrarPosteo = 
-        db 
-          .collection('posts')
-          .doc(id)
-          borrarPosteo.delete()
+    borrarPost(id){
+        db.collection('posts').doc(id).delete()
       }
 
 
@@ -85,15 +69,14 @@ export default class Profile extends Component {
 
                 this.state.loading? <Loader/> :
                 <ScrollView>
-                   
-
+            
                 <View style={styles.container3}>
                     {this.state.user.data.image ?
                     <Image source={{uri: this.state.user.data.image}} style={styles.fotoPerfil}/>
                     :
                     <FontAwesome name="user-circle" size={40} color="black" />
                     }
-                    <Text style={styles.text2}><strong>{this.state.user.data.userName}</strong></Text>
+                    <Text style={styles.text2}><strong>{this.state.user.data.userName.toLowerCase()}</strong></Text>
                 </View>
 
                 
@@ -124,9 +107,11 @@ export default class Profile extends Component {
                         renderItem={({ item }) => 
                         <>
                         <Post post={item} {...this.props} />
-                        <TouchableOpacity   onPress={() => this.deletePost(item.id)}>
-                            <Text style={styles.button}><strong>Delete Post</strong></Text>
+                        <View style={styles.containerDelete}>
+                        <TouchableOpacity   onPress={() => this.borrarPost(item.id)}>
+                        <FontAwesome style={styles.delete} name="trash-o" size={30} color="red" />
                       </TouchableOpacity>
+                        </View>
                         </>
                         }
                     /> 
@@ -166,6 +151,16 @@ button: {
     marginHorizontal:16,
     width:200,
     color: "white"
+},
+containerDelete:{
+    display:'1',
+    flexDirection: 'row',
+    justifyContent: 'right',
+    alignItems: 'center',
+    
+},
+delete:{
+marginRight:5
 },
 add: {
     display:'flex',

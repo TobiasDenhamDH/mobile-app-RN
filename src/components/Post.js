@@ -51,25 +51,44 @@ export default class Post extends Component  {
     return (
         <>
             <View style={styles.container}>
+
+            {auth.currentUser.displayName !== this.props.post.data.owner?
+
                 <TouchableOpacity 
-                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : this.props.post.data.owner})}}
+                    onPress={()=>{this.props.navigation.navigate('Perfil del usuario', {userName : this.props.post.data.owner})}}
                     >
                 <View style={styles.container3}>
-                {this.props.post.data.ownerPic ?
+
+                    {this.props.post.data.ownerPic ?
                         <Image source={{uri: this.props.post.data.ownerPic}} style={styles.fotoPerfil}/>
-                    :
+                        :
                         <FontAwesome name="user-circle" size={40} color="black" />
+                    }
+
+                    <Text style={styles.text2}><strong>{this.props.post.data.owner.toLowerCase()}</strong></Text>
+                </View>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Mi perfil', {userName : this.props.post.data.owner})}}
+                >
+                <View style={styles.container3}>
+
+                {this.props.post.data.ownerPic ?
+                    <Image source={{uri: this.props.post.data.ownerPic}} style={styles.fotoPerfil}/>
+                    :
+                    <FontAwesome name="user-circle" size={40} color="black" />
                 }
 
                 <Text style={styles.text2}><strong>{this.props.post.data.owner.toLowerCase()}</strong></Text>
                 </View>
                 </TouchableOpacity>
+                }
 
                 <Image 
                     source={{uri:this.props.post.data.uri}}
                     resizeMode="cover"
                     style={styles.image}
-                
                 />
 
                 {this.state.likes.includes(auth.currentUser.displayName.toLowerCase())?
@@ -83,7 +102,7 @@ export default class Post extends Component  {
 
                     <TouchableOpacity 
                      style={styles.comment}
-                    onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
+                    onPress={()=>{this.props.navigation.navigate('Comentarios', {id: this.props.post.id})}}
 
                     >
                     <FontAwesome name="comment-o" size={24} color="black" />
@@ -104,7 +123,7 @@ export default class Post extends Component  {
 
                     <TouchableOpacity 
                     style={styles.comment}
-                    onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
+                    onPress={()=>{this.props.navigation.navigate('Comentarios', {id: this.props.post.id})}}
 
                     >
                     <FontAwesome name="comment-o" size={24} color="black" />
@@ -112,37 +131,53 @@ export default class Post extends Component  {
                 </View>
                 }
 
-                <Text style={styles.text}><strong>{this.props.post.data.owner.toLowerCase()}</strong> {this.props.post.data.description}</Text>
-                
                 {!this.state.likes.length?             
-                <Text style={styles.text} >No hay likes</Text>          
-                : this.state.likes.length == 1?              
-                <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} </Text>             
-                :
-                <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} y {this.state.likes.length -1} más</Text>
-            }
+                    <Text style={styles.text} >No hay likes</Text>          
+                    : this.state.likes.length == 1?              
+                    <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} </Text>             
+                    :
+                    <Text style={styles.text} >Le gusta a {this.state.likes.slice(-1)} y {this.state.likes.length -1} más</Text>
+                }
 
-            {!this.props.post.data.comments.length?
-               
-            <Text style={styles.text} >No hay comentarios</Text>
-
-            : this.props.post.data.comments.length == 1?     
+                {auth.currentUser.displayName !== this.props.post.data.owner?
+                    <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Perfil del usuario', {userName : this.props.post.data.owner})}}
+                    >
+                    <Text style={styles.text}><strong>{this.props.post.data.owner.toLowerCase()}</strong> {this.props.post.data.description}</Text>
             
-            <TouchableOpacity 
-                onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
-            >
-            <Text style={styles.text}>Ver el comentario</Text> 
-            </TouchableOpacity>
+                    </TouchableOpacity>
+                :
+                
 
-            :
-            <TouchableOpacity 
-                onPress={()=>{this.props.navigation.navigate('Comments', {id: this.props.post.id})}}
-            >
-            <Text style={styles.text} >Ver los {this.props.post.data.comments.length} comentarios</Text>
-            </TouchableOpacity>
-            }    
-            </View>
-        </>
+                    <TouchableOpacity 
+                        onPress={()=>{this.props.navigation.navigate('Mi perfil')}}
+                    >
+                        <Text style={styles.text}><strong>{this.props.post.data.owner.toLowerCase()}</strong> {this.props.post.data.description}</Text>
+                
+                    </TouchableOpacity>
+                }
+                
+                {!this.props.post.data.comments.length?
+                
+                <Text style={styles.text} >No hay comentarios</Text>
+
+                : this.props.post.data.comments.length == 1?     
+                
+                <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Comentarios', {id: this.props.post.id})}}
+                >
+                <Text style={styles.text}>Ver el comentario</Text> 
+                </TouchableOpacity>
+
+                :
+                <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Comentarios', {id: this.props.post.id})}}
+                >
+                <Text style={styles.text} >Ver los {this.props.post.data.comments.length} comentarios</Text>
+                </TouchableOpacity>
+                }    
+                </View>
+            </>
     )
 }
 }

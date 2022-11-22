@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { Camera } from 'expo-camera'
 import { TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native'
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
-import { db,auth,storage } from '../firebase/config'
+import { storage } from '../firebase/config'
 
 
 export default class MyCamera extends Component {
@@ -62,48 +62,49 @@ export default class MyCamera extends Component {
 
     render() {
         return (
-            <View  style={styles.cameraBody}>
-                {this.state.permission? 
+            <View style={styles.cameraBody}>
+                {this.state.permission?
+
                  this.state.showCamera?
+
                 <View style={styles.cameraBody}>
-                <Camera
-                    style={styles.cameraBody}
-                    type={Camera.Constants.Type.back} 
-                    ref= {metodosDeCamara =>this.metodosDeCamara = metodosDeCamara}
-                />
-            
-                <TouchableOpacity
-                    style={styles.buttonLogin2}
-                    onPress={()=>this.tomarFoto()}
+                    <Camera
+                        style={styles.cameraBody}
+                        type={Camera.Constants.Type.back} 
+                        ref= {metodosDeCamara =>this.metodosDeCamara = metodosDeCamara}
+                    />
                 
-                >
-                    <Ionicons name="radio-button-on-outline" size={70} color="#552586" />
-                </TouchableOpacity>
+                    <TouchableOpacity
+                        style={styles.buttonLogin2}
+                        onPress={()=>this.tomarFoto()} 
+                    >
+                        <Ionicons name="radio-button-on-outline" size={70} color="#552586" />
+                    </TouchableOpacity>
                 </View>
                 :
                 <View>
-                <Image
-                        style={styles.cameraBody}
-                        source={{uri:this.state.uri}}
-                    />
+                    <Image
+                            style={styles.cameraBody}
+                            source={{uri:this.state.uri}}
+                        />
 
-                <View style={styles.container2}>
+                    <View style={styles.container2}>
+                        
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={()=>{this.guardarFoto()}}
+                        >
+                            <MaterialIcons name="cloud-upload" size={60} color="#552586" />
+                        </TouchableOpacity>
                     
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={()=>{this.guardarFoto()}}
-                    >
-                        <MaterialIcons name="cloud-upload" size={60} color="#552586" />
-                    </TouchableOpacity>
-                
-                    <TouchableOpacity
-                        style={styles.button}
-                        onPress={()=>{this.clearFoto()}}
-                    >
-                        <MaterialIcons name="delete" size={60} color="#552586" />
-                    </TouchableOpacity>
-                    
-                </View>
+                        <TouchableOpacity
+                            style={styles.button}
+                            onPress={()=>{this.clearFoto()}}
+                        >
+                            <MaterialIcons name="delete" size={60} color="#552586" />
+                        </TouchableOpacity>
+                        
+                    </View>
                 </View>
                 :
                 <View style={styles.text}>

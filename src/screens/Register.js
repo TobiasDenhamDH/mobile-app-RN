@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native';
 import { auth, db, storage} from '../firebase/config';
-// import {getStorage, ref, uploadBytes} from '../firebase/config/storage'
 import * as ImagePicker from 'expo-image-picker';
 import Loader from '../components/Loader';
 

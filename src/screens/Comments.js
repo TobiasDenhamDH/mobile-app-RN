@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, Camera, ScrollView, Image } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, ScrollView, Image } from 'react-native';
 import { auth, db } from '../firebase/config';
 import firebase from 'firebase';
 import { FontAwesome } from '@expo/vector-icons';
@@ -75,8 +75,10 @@ export default class Comments extends Component {
                         keyExtractor={item=>item.createdAt} // sirve para identificar cada elemento de la iteración
                         ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
                         renderItem={({item})=>
+                        <>
+                        {auth.currentUser.displayName !== item.owner?
                         <TouchableOpacity 
-                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : item.owner })}}
+                        onPress={()=>{this.props.navigation.navigate('Perfil del usuario', {userName : item.owner })}}
                         >
                         <View style={styles.listadoComentario}>
                             {item.image ?
@@ -87,8 +89,27 @@ export default class Comments extends Component {
                             <Text style={styles.userName}><strong>{item.owner.toLowerCase()}</strong></Text>
                             <Text style={styles.textoComentario}>{item.text}</Text>
                         </View>
-                        </TouchableOpacity>}
-                    >   </FlatList>
+                        </TouchableOpacity>
+
+                        :
+                        <TouchableOpacity 
+                        onPress={()=>{this.props.navigation.navigate('Mi perfil', {userName : item.owner })}}
+                        >
+                        <View style={styles.listadoComentario}>
+                            {item.image ?
+                                <Image source={{uri: item.image}} style={styles.fotoPerfil}/>
+                            :
+                                <FontAwesome name="user-circle" size={40} color="black" />
+                            }
+                            <Text style={styles.userName}><strong>{item.owner.toLowerCase()}</strong></Text>
+                            <Text style={styles.textoComentario}>{item.text}</Text>
+                        </View>
+                        </TouchableOpacity>
+                        }
+                        </>
+                        
+                    }
+                    />
 
                     :
                     

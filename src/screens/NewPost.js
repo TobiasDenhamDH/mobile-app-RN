@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { Camera } from 'expo-camera'
-import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, FlatList } from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity} from 'react-native'
 import MyCamera from '../components/MyCamera'
-import { db,auth,storage } from '../firebase/config'
+import { db,auth } from '../firebase/config'
 import firebase from 'firebase';
 import Loader from '../components/Loader'
 
@@ -45,14 +44,6 @@ export default class NewPost extends Component {
     }
 
     crearPost(){
-        console.log(this.state.userActivo.data.image)
-        db.collection('users').doc(this.state.userActivo.id).update({
-                
-            posts: firebase.firestore.FieldValue.arrayUnion(this.state.description)
-        
-            })
-            .catch(err=>console.log(err))
-
         db.collection('posts').add({
             owner:auth.currentUser.displayName,
             description:this.state.description,

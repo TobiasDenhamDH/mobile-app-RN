@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ScrollView, StyleSheet, View, TouchableOpacity, TextInput, Text, FlatList, Image} from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { db } from '../firebase/config';
+import { auth, db } from '../firebase/config';
 import { FontAwesome } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 
@@ -55,7 +55,7 @@ export default class Search extends Component {
             <TextInput
                 style={styles.campo}
                 keyboardType='default'
-                placeholder='buscar'
+                placeholder='Ingresa un nombre de usuario'
                 onChangeText={busqueda=>this.setState({filterBy: busqueda})}
                 value={this.state.filterBy}
             />
@@ -72,24 +72,44 @@ export default class Search extends Component {
             <View> 
             <Text style={styles.text}><strong>Resultados de búsqueda</strong></Text>
             <FlatList
-                    data={this.state.resultados}
-                    keyExtractor={item=>item.id.toString()}
-                    ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
-                    renderItem={({item})=> 
-                    <TouchableOpacity 
-                        onPress={()=>{this.props.navigation.navigate('UserProfile', {userName : item.data.userName})}}
-                    >
-                        <View style={styles.listadoUsers}>
-                        {item.data.image ?
-                            <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
-                        :
-                            <FontAwesome name="user-circle" size={40} color="black" />
-                        }
-                        <Text style={styles.userName}><strong>{item.data.userName.toLowerCase()}</strong></Text>
-                        </View>
-                    </TouchableOpacity>}
-            >
-            </FlatList>
+                data={this.state.resultados}
+                keyExtractor={item=>item.id.toString()}
+                ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 300, marginVertical: 5, alignSelf:'center'}}></View>)}
+                renderItem={({item})=> 
+               <>
+                {auth.currentUser.displayName !== item.data.userName? 
+                
+                <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Perfil del usuario', {userName : item.data.userName})}}
+                >
+                    <View style={styles.listadoUsers}>
+                    {item.data.image ?
+                        <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
+                    :
+                        <FontAwesome name="user-circle" size={40} color="black" />
+                    }
+                    <Text style={styles.userName}><strong>{item.data.userName.toLowerCase()}</strong></Text>
+                    </View>
+                </TouchableOpacity>
+                :
+                <TouchableOpacity 
+                    onPress={()=>{this.props.navigation.navigate('Mi perfil', {userName : item.data.userName})}}
+                >
+                    <View style={styles.listadoUsers}>
+                    {item.data.image ?
+                        <Image source={{uri: item.data.image}} style={styles.fotoPerfil}/>
+                    :
+                        <FontAwesome name="user-circle" size={40} color="black" />
+                    }
+                    <Text style={styles.userName}><strong>{item.data.userName.toLowerCase()}</strong></Text>
+                    </View>
+                </TouchableOpacity>
+
+                }
+                </>
+                }
+                
+            />
             </View> 
 
             :

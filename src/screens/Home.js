@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, Camera, ScrollView } from 'react-native';
-import { auth, db } from '../firebase/config';
-import firebase from 'firebase';
+import { View, FlatList, ScrollView } from 'react-native';
+import { db } from '../firebase/config';
 import Post from '../components/Post';
 import Loader from '../components/Loader'
 
@@ -44,7 +43,7 @@ export default class Home extends Component {
                     ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 400, alignSelf:'center'}}></View>)}
                     keyExtractor={item=>item.id.toString()}
                     renderItem={({item})=><Post post={item} {...this.props}/>} // para pasar las props de navegación del home a los posteos porque no es otra pantalla
-                >   </FlatList>
+                />
 
                 </ScrollView>
                                    

@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
-import {  Text, View, TouchableOpacity,ScrollView, StyleSheet, Image , FlatList} from 'react-native';
-import { db, auth } from '../firebase/config';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
+import {  Text, View, ScrollView, StyleSheet, Image , FlatList} from 'react-native';
+import { db } from '../firebase/config';
+import { FontAwesome} from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import Post from '../components/Post';
-import NewPost from './NewPost';
+
 
 export default class UserProfile extends Component {
     constructor(props) {
@@ -16,16 +16,13 @@ export default class UserProfile extends Component {
         }
     }
 
-
     componentDidMount() {
-
         db.collection('users')
         .where('userName', '==', this.props.route.params.userName)
         .onSnapshot((docs) => {
             let usersFromDb = {};
             docs.forEach((doc) => {
             let user = doc.data()
-            console.log(user)
             usersFromDb = {
                 id: doc.id,
                 data: user,
@@ -52,10 +49,7 @@ export default class UserProfile extends Component {
             posts: posts,
    
           })
-        })
-  
-
-       
+        })   
     }
 
     render() {
@@ -71,7 +65,7 @@ export default class UserProfile extends Component {
                     :
                     <FontAwesome name="user-circle" size={40} color="black" />
                     }
-                    <Text style={styles.text2}><strong>{this.state.user.data.userName}</strong></Text>
+                    <Text style={styles.text2}><strong>{this.state.user.data.userName.toLowerCase()}</strong></Text>
                 </View>
 
                 
@@ -98,15 +92,11 @@ export default class UserProfile extends Component {
                 :
                 
                 <View style={styles.container6}>
-                <Text style={styles.text}><strong>Aún no tienes posteos</strong></Text>
+                <Text style={styles.text}><strong>Aún no tiene posteos</strong></Text>
                 </View>
                 
                
                 }
-
-                    
-                    
-
                 </ScrollView>
                            
         )
