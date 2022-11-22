@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import {  Text, View, TouchableOpacity, FlatList,ScrollView, StyleSheet, Image} from 'react-native';
 import { db, auth } from '../firebase/config';
-import { FontAwesome, Entypo } from '@expo/vector-icons';
+import { FontAwesome, Entypo, MaterialIcons } from '@expo/vector-icons';
 import Loader from '../components/Loader';
 import Post from '../components/Post';
 
@@ -36,14 +36,13 @@ export default class Profile extends Component {
         })  
 
         db.collection('posts')
-        .where('owner', '==', auth.currentUser.displayName )
+        .where('owner', '==', auth.currentUser.displayName)
+        .orderBy('createdAt', 'desc')
         .onSnapshot((docs)=>{
             let posts = [];
             docs.forEach(doc=>{
             posts.push( {
                 id:doc.id, data:doc.data()})
-
-    
         })
 
         this.setState({
@@ -77,24 +76,30 @@ export default class Profile extends Component {
                     <FontAwesome name="user-circle" size={40} color="black" />
                     }
                     <Text style={styles.text2}><strong>{this.state.user.data.userName.toLowerCase()}</strong></Text>
+                    <View style={styles.container4}>
+                    <TouchableOpacity onPress={()=> this.logOut()}>
+                        {/* <Entypo name="log-out" size={24} color="black" /> */}
+                        <Text style={styles.button}><strong>Cerrar sesión</strong></Text>
+                    </TouchableOpacity>
+                </View>
                 </View>
 
                 
                 <View style={styles.container5}>
-                    <Text style={styles.text3}>{this.state.user.data.email}</Text>                     
-                    <Text style={styles.text3}>{this.state.user.data.bio}</Text>
-                </View>
-
-                <View style={styles.container4}>
-                    <TouchableOpacity onPress={()=> this.logOut()}>
-                        <Text style={styles.button}><strong>Cerrar sesión</strong></Text>
-                    </TouchableOpacity>
+                    {this.state.user.data.bio ? 
+                        <View>
+                        <Text style={styles.text3}>{this.state.user.data.email}</Text>                     
+                        <Text style={styles.text3}>{this.state.user.data.bio}</Text>
+                        </View>
+                    :
+                        <Text style={styles.text3}>{this.state.user.data.email}</Text>
+                    }
                 </View>
                     
                 {this.state.posts.length?
-                 <>  
+                <>  
                 <View style={styles.container6}>
-                    <Text style={styles.text}><strong>Mis Posteos ({this.state.posts.length})</strong></Text>
+                    <Text style={styles.text}><strong>Mis posteos ({this.state.posts.length})</strong></Text>
                     <TouchableOpacity onPress={()=> this.props.navigation.navigate('Nuevo Posteo')}>
                             <Entypo style= {styles.add} name="plus" size={30} color="black" />
                         </TouchableOpacity>
@@ -103,16 +108,17 @@ export default class Profile extends Component {
                 <View>
                     <FlatList
                         data={this.state.posts}
+                        ItemSeparatorComponent={()=>(<View style={{height: 1, backgroundColor: '#B7B9BF', width: 400, marginVertical: 5, alignSelf:'center'}}></View>)}
                         keyExtractor={item => item.id.toString()}
                         renderItem={({ item }) => 
-                        <>
-                        <Post post={item} {...this.props} />
-                        <View style={styles.containerDelete}>
-                        <TouchableOpacity   onPress={() => this.borrarPost(item.id)}>
-                        <FontAwesome style={styles.delete} name="trash-o" size={30} color="red" />
-                      </TouchableOpacity>
-                        </View>
-                        </>
+                            <>
+                                <Post post={item} {...this.props} />
+                                <View style={styles.containerDelete}>
+                                    <TouchableOpacity   onPress={() => this.borrarPost(item.id)}>
+                                    <MaterialIcons name="delete" size={30} color="black" />
+                                    </TouchableOpacity>
+                                </View>
+                            </>
                         }
                     /> 
                 </View>
@@ -121,20 +127,14 @@ export default class Profile extends Component {
                 :
                 
                 <View style={styles.container6}>
-                <Text style={styles.text}><strong>Aún no tienes posteos</strong></Text>
+                    <Text style={styles.text}><strong>Aún no tienes posteos</strong></Text>
 
-                
                     <TouchableOpacity onPress={()=> this.props.navigation.navigate('Nuevo Posteo')}>
                         <Entypo style= {styles.add} name="plus" size={30} color="black" />
                     </TouchableOpacity>
-
                 </View>
                
                 }
-
-                    
-                    
-
                 </ScrollView>
                            
         )
@@ -148,8 +148,6 @@ button: {
     borderRadius:8,
     textAlign:'center',
     marginVertical:4,
-    marginHorizontal:16,
-    width:200,
     color: "white"
 },
 containerDelete:{
@@ -157,10 +155,9 @@ containerDelete:{
     flexDirection: 'row',
     justifyContent: 'right',
     alignItems: 'center',
-    
 },
-delete:{
-marginRight:5
+delete: {
+    marginRight:5
 },
 add: {
     display:'flex',
@@ -168,18 +165,14 @@ add: {
 },
 container4: {
     flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
 },
 container6: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'left',
     alignItems: 'left',
-    
-  
 },
 container3: {
     display: 'flex',
@@ -188,15 +181,14 @@ container3: {
     paddingTop: 10,
     paddingBottom: 10
  },
- container5: {
+container5: {
     display: 'flex',
     flexDirection: 'column',
-    marginHorizontal: 6,
     paddingBottom: 10
  },
- fotoPerfil: {
-    height: 100,
-    width: 100,
+fotoPerfil: {
+    height: 90,
+    width: 90,
     borderRadius: 50
 },
 text: {
@@ -206,19 +198,17 @@ text: {
     marginBottom:10
 },
 text2: {
-    fontSize: 35,
+    fontSize: 28,
     color: 'black',
     alignSelf:'center',
-    marginHorizontal:10,
-    marginTop: 15,
-  
+    marginHorizontal:10  
 },
 text3: {
     fontSize: 15,
     color: 'black',
     marginHorizontal:6,
-  
-  
+    paddingTop: 7,
+    paddingBottom: 7
 },
 
 })
