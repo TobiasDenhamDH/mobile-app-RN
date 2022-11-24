@@ -58,7 +58,7 @@ export default class NewPost extends Component {
             this.setState({
                 description:'',
                 showCamera: true
-            },()=>this.props.navigation.navigate('Home')
+            },()=>this.props.navigation.navigate('Página principal')
             )
         })
     }
