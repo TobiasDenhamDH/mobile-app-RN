@@ -84,14 +84,14 @@ export default class Register extends Component {
 
             db.collection('users').add({
                 email:email,
-                userName:userName,
+                userName:userName.toLowerCase(),
                 bio:bio,
                 posts:[],
                 image: image
             })
 
             res.user.updateProfile({
-                displayName: userName,
+                displayName: userName.toLowerCase(),
             })
 
             this.setState({
